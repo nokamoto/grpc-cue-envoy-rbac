@@ -29,7 +29,8 @@
 		"ms-kubernetes-tools.vscode-kubernetes-tools",
 		"redhat.vscode-yaml",
 		"ms-vscode.makefile-tools",
-		"GitHub.copilot"
+		"GitHub.copilot",
+		"GitHub.vscode-pull-request-github"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
