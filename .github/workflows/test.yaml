@@ -11,27 +11,19 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      PROTOC: 3.20.1
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-go@v3
       with:
         go-version-file: go.mod
-    - uses: actions/cache@v3
-      id: protoc
-      with:
-        path: |
-          /user/local/bin/protoc
-          /user/local/include/google
-        key: protoc-${{ env.PROTOC }}
     - name: Install protoc
-      if: steps.protoc.outputs.cache-hit != 'true'
       run: |
         curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC}/protoc-${PROTOC}-linux-x86_64.zip \
           && sudo unzip protoc-${PROTOC}-linux-x86_64.zip -d /usr/local \
+          && sudo chmod +x /usr/local/bin/protoc \
           && rm protoc-${PROTOC}-linux-x86_64.zip
-    - run: sudo chmod +x /usr/local/bin/protoc
+      env:
+        PROTOC: 3.20.1
     - name: Install clang-format
       run: sudo apt-get update && sudo apt-get -y install --no-install-recommends clang-format
     - name: Install go deps
