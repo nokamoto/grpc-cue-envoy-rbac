@@ -10,7 +10,12 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends clang-format protobuf-compiler
+    && apt-get -y install --no-install-recommends clang-format
+
+RUN curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.20.1/protoc-3.20.1-linux-x86_64.zip \
+    && unzip protoc-3.20.1-linux-x86_64.zip -d /usr/local \
+    && chmod +x /usr/local/bin/protoc \
+    && rm protoc-3.20.1-linux-x86_64.zip
 
 # [Optional] Uncomment the next lines to use go get to install anything else you need
 USER vscode
