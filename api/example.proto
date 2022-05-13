@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package nokamoto.github.com;
+
+option go_package = "github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api";
+
+service ExampleService {
+  rpc CreateExample(CreateExampleRequest) returns (Example);
+}
+
+message Example {
+  string name = 1;
+}
+
+message CreateExampleRequest {}
