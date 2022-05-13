@@ -19,7 +19,7 @@ jobs:
     - uses: actions/cache@v3
       id: protoc
       with:
-        paths: |
+        path: |
           /user/local/bin/protoc
           /user/local/include
         key: ${{ runner.os }}-${{ hashFiles('/user/local/bin/protoc') }}
