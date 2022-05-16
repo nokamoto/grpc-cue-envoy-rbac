@@ -3,6 +3,7 @@ module github.com/nokamoto/grpc-cue-envoy-rbac
 go 1.18
 
 require (
+	github.com/google/go-cmp v0.5.8
 	google.golang.org/grpc v1.46.0
 	google.golang.org/protobuf v1.28.0
 )
