@@ -33,7 +33,7 @@ func TestPlugin_Run(t *testing.T) {
 		File: []*pluginpb.CodeGeneratorResponse_File{
 			{
 				Name:    proto.String("rbac.json"),
-				Content: proto.String("{}"),
+				Content: proto.String("{}\n"),
 			},
 		},
 	}

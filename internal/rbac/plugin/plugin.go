@@ -41,7 +41,7 @@ func (p *Plugin) Run() error {
 		File: []*pluginpb.CodeGeneratorResponse_File{
 			{
 				Name:    proto.String("rbac.json"),
-				Content: proto.String("{}"),
+				Content: proto.String("{}\n"),
 			},
 		},
 	})
