@@ -26,6 +26,7 @@ type Authorization struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// format: `${service}.${resourc}.${method}`
 	Permission string `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
 }
 
