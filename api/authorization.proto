@@ -11,6 +11,14 @@ message Authorization {
   string permission = 1;
 }
 
+message ExternalAuthorization {
+  message Rule {
+    string path = 1;
+    Authorization authorization = 2;
+  }
+  repeated Rule rules = 1;
+}
+
 // ref. https://github.com/protocolbuffers/protobuf/blob/b3199d62be2af7f2ddd60a002e0f48850df09997/src/google/protobuf/descriptor.proto#L530-L531
 extend google.protobuf.MethodOptions {
   Authorization authz = 50000;
