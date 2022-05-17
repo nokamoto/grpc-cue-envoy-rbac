@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package nokamoto.github;
+
+option go_package = "github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api";
+
+import "google/protobuf/descriptor.proto";
+
+message Authorization {
+  // format: `${service}.${resourc}.${method}`
+  string permission = 1;
+}
+
+// ref. https://github.com/protocolbuffers/protobuf/blob/b3199d62be2af7f2ddd60a002e0f48850df09997/src/google/protobuf/descriptor.proto#L530-L531
+extend google.protobuf.MethodOptions {
+  Authorization authz = 50000;
+}
