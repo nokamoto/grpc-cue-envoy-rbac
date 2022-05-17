@@ -17,5 +17,5 @@ all:
 	go install ./cmd/protoc-gen-rbac
 
 	protoc --rbac_out=deployments \
-		--rbac_opt=paths=source_relative \
+		--rbac_opt=debug=stderr \
 		$$(find api -type f -name *.proto)

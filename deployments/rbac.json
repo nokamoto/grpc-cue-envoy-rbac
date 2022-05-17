@@ -1,1 +1,10 @@
-{}
+{
+  "rules": [
+    {
+      "path": "/nokamoto.github.ExampleService/CreateExample",
+      "authorization": {
+        "permission": "example.example.create"
+      }
+    }
+  ]
+}

@@ -12,6 +12,7 @@ service ExampleService {
       permission: "example.example.create"
     };
   }
+  rpc UnrestrectedCreateExample(CreateExampleRequest) returns (Example);
 }
 
 message Example {
