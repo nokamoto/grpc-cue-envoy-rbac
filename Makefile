@@ -9,7 +9,6 @@ all:
 		--go_opt=paths=source_relative \
 		--go-grpc_out=$(GO_OUT) \
 		--go-grpc_opt=paths=source_relative \
-		-I api \
 		$$(find api -type f -name *.proto)
 
 	go test ./...
@@ -19,5 +18,4 @@ all:
 
 	protoc --rbac_out=deployments \
 		--rbac_opt=paths=source_relative \
-		-I api \
 		$$(find api -type f -name *.proto)
