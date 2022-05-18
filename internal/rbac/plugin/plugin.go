@@ -63,9 +63,7 @@ func (p *Plugin) Run() error {
 		}
 	}
 
-	content, err := protojson.MarshalOptions{
-		Indent: "  ",
-	}.Marshal(&cfg)
+	content, err := protojson.Marshal(&cfg)
 	if err != nil {
 		return err
 	}
