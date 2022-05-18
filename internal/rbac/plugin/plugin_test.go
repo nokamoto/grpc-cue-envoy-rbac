@@ -117,9 +117,7 @@ func TestPlugin_Run(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			content, err := protojson.MarshalOptions{
-				Indent: "  ",
-			}.Marshal(test.want)
+			content, err := protojson.Marshal(test.want)
 			if err != nil {
 				t.Fatal(err)
 			}

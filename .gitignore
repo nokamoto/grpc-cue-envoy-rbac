@@ -1,1 +1,4 @@
 .vscode/*
+
+# ref. https://github.com/golang/protobuf/issues/1121
+deployments/rbac.json
