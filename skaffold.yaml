@@ -1,0 +1,26 @@
+apiVersion: skaffold/v2beta28
+kind: Config
+metadata:
+  name: grpc-cue-envoy-rbac
+build:
+  artifacts:
+  - image: example
+    buildpacks:
+      builder: gcr.io/buildpacks/builder:v1
+      env:
+      - GOOGLE_BUILDABLE=./cmd/example
+      dependencies:
+        paths:
+        - cmd/**
+        - internal/**
+        - pkg/**
+        - go.*
+deploy:
+  kustomize:
+    paths:
+    - deployments
+portForward:
+- resourceType: service
+  resourceName: example
+  port: 9000
+  localPort: 9000
