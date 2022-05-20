@@ -24,3 +24,7 @@ portForward:
   resourceName: example
   port: 9000
   localPort: 9000
+- resourceType: service
+  resourceName: envoy
+  port: 8080
+  localPort: 8080
