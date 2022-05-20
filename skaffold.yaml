@@ -15,6 +15,17 @@ build:
         - internal/**
         - pkg/**
         - go.*
+  - image: authorization
+    buildpacks:
+      builder: gcr.io/buildpacks/builder:v1
+      env:
+      - GOOGLE_BUILDABLE=./cmd/authorization
+      dependencies:
+        paths:
+        - cmd/**
+        - internal/**
+        - pkg/**
+        - go.*
 deploy:
   kustomize:
     paths:
@@ -28,3 +39,7 @@ portForward:
   resourceName: envoy
   port: 8080
   localPort: 8080
+- resourceType: service
+  resourceName: authorization
+  port: 9001
+  localPort: 9001

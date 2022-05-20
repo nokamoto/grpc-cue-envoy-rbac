@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: authorization
+  name: authorization
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authorization
+  template:
+    metadata:
+      labels:
+        app: authorization
+    spec:
+      containers:
+      - image: authorization
+        name: authorization
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: authorization
+  name: authorization
+spec:
+  ports:
+  - name: tcp
+    port: 9001
+    protocol: TCP
+    targetPort: 9001
+  selector:
+    app: authorization
+  type: ClusterIP
+---
