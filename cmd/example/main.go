@@ -1,13 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"net"
-
+	"github.com/nokamoto/grpc-cue-envoy-rbac/internal/server"
 	"github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api/api"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 type example struct {
@@ -15,16 +11,7 @@ type example struct {
 }
 
 func main() {
-	port := 9000
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	s := grpc.NewServer()
-	api.RegisterExampleServiceServer(s, &example{})
-	reflection.Register(s)
-	log.Printf("server listening at %v", lis.Addr())
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	server.Serve(9000, func(s *grpc.Server) {
+		api.RegisterExampleServiceServer(s, &example{})
+	})
 }

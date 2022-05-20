@@ -3,5 +3,6 @@ configMapGenerator:
   files:
   - envoy-conf.yaml
 resources:
+- authorization.yaml
 - envoy.yaml
 - example.yaml

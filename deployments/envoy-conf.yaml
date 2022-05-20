@@ -17,6 +17,15 @@ static_resources:
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
           http_filters:
+          # https://www.envoyproxy.io/docs/envoy/v1.22.0/configuration/listeners/network_filters/ext_authz_filter
+          - name: envoy.filters.network.ext_authz
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+              grpc_service:
+                envoy_grpc:
+                  cluster_name: service_authorization
+                timeout: 0.250s
+              transport_api_version: V3
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
@@ -46,3 +55,16 @@ static_resources:
               socket_address:
                 address: example
                 port_value: 9000
+  - name: service_authorization
+    type: LOGICAL_DNS
+    dns_lookup_family: V4_ONLY
+    http2_protocol_options: {}
+    load_assignment:
+      cluster_name: service_authorization
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: authorization
+                port_value: 9001
