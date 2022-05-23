@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/nokamoto/grpc-cue-envoy-rbac/internal/server"
-	"github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api/api"
+	"github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api"
 	"google.golang.org/grpc"
 )
 

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.20.1
-// source: example.proto
+// source: api/example.proto
 
 package api
 
@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ExampleServiceClient interface {
 	CreateExample(ctx context.Context, in *CreateExampleRequest, opts ...grpc.CallOption) (*Example, error)
+	UnrestrectedCreateExample(ctx context.Context, in *CreateExampleRequest, opts ...grpc.CallOption) (*Example, error)
 }
 
 type exampleServiceClient struct {
@@ -35,7 +36,16 @@ func NewExampleServiceClient(cc grpc.ClientConnInterface) ExampleServiceClient {
 
 func (c *exampleServiceClient) CreateExample(ctx context.Context, in *CreateExampleRequest, opts ...grpc.CallOption) (*Example, error) {
 	out := new(Example)
-	err := c.cc.Invoke(ctx, "/nokamoto.github.com.ExampleService/CreateExample", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/nokamoto.github.ExampleService/CreateExample", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *exampleServiceClient) UnrestrectedCreateExample(ctx context.Context, in *CreateExampleRequest, opts ...grpc.CallOption) (*Example, error) {
+	out := new(Example)
+	err := c.cc.Invoke(ctx, "/nokamoto.github.ExampleService/UnrestrectedCreateExample", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,6 +57,7 @@ func (c *exampleServiceClient) CreateExample(ctx context.Context, in *CreateExam
 // for forward compatibility
 type ExampleServiceServer interface {
 	CreateExample(context.Context, *CreateExampleRequest) (*Example, error)
+	UnrestrectedCreateExample(context.Context, *CreateExampleRequest) (*Example, error)
 	mustEmbedUnimplementedExampleServiceServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedExampleServiceServer struct {
 
 func (UnimplementedExampleServiceServer) CreateExample(context.Context, *CreateExampleRequest) (*Example, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateExample not implemented")
+}
+func (UnimplementedExampleServiceServer) UnrestrectedCreateExample(context.Context, *CreateExampleRequest) (*Example, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnrestrectedCreateExample not implemented")
 }
 func (UnimplementedExampleServiceServer) mustEmbedUnimplementedExampleServiceServer() {}
 
@@ -80,10 +94,28 @@ func _ExampleService_CreateExample_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/nokamoto.github.com.ExampleService/CreateExample",
+		FullMethod: "/nokamoto.github.ExampleService/CreateExample",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ExampleServiceServer).CreateExample(ctx, req.(*CreateExampleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ExampleService_UnrestrectedCreateExample_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateExampleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExampleServiceServer).UnrestrectedCreateExample(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/nokamoto.github.ExampleService/UnrestrectedCreateExample",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExampleServiceServer).UnrestrectedCreateExample(ctx, req.(*CreateExampleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -92,14 +124,18 @@ func _ExampleService_CreateExample_Handler(srv interface{}, ctx context.Context,
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ExampleService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "nokamoto.github.com.ExampleService",
+	ServiceName: "nokamoto.github.ExampleService",
 	HandlerType: (*ExampleServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateExample",
 			Handler:    _ExampleService_CreateExample_Handler,
 		},
+		{
+			MethodName: "UnrestrectedCreateExample",
+			Handler:    _ExampleService_UnrestrectedCreateExample_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "example.proto",
+	Metadata: "api/example.proto",
 }

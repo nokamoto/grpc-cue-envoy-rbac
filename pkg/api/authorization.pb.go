@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.28.0
 // 	protoc        v3.20.1
-// source: authorization.proto
+// source: api/authorization.proto
 
 package api
 
@@ -26,13 +26,14 @@ type Authorization struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// format: `${service}.${resourc}.${method}`
 	Permission string `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
 }
 
 func (x *Authorization) Reset() {
 	*x = Authorization{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authorization_proto_msgTypes[0]
+		mi := &file_api_authorization_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -45,7 +46,7 @@ func (x *Authorization) String() string {
 func (*Authorization) ProtoMessage() {}
 
 func (x *Authorization) ProtoReflect() protoreflect.Message {
-	mi := &file_authorization_proto_msgTypes[0]
+	mi := &file_api_authorization_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +59,7 @@ func (x *Authorization) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Authorization.ProtoReflect.Descriptor instead.
 func (*Authorization) Descriptor() ([]byte, []int) {
-	return file_authorization_proto_rawDescGZIP(), []int{0}
+	return file_api_authorization_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Authorization) GetPermission() string {
@@ -68,81 +69,222 @@ func (x *Authorization) GetPermission() string {
 	return ""
 }
 
-var file_authorization_proto_extTypes = []protoimpl.ExtensionInfo{
+type ExternalAuthorization struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Rules []*ExternalAuthorization_Rule `protobuf:"bytes,1,rep,name=rules,proto3" json:"rules,omitempty"`
+}
+
+func (x *ExternalAuthorization) Reset() {
+	*x = ExternalAuthorization{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_authorization_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ExternalAuthorization) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExternalAuthorization) ProtoMessage() {}
+
+func (x *ExternalAuthorization) ProtoReflect() protoreflect.Message {
+	mi := &file_api_authorization_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExternalAuthorization.ProtoReflect.Descriptor instead.
+func (*ExternalAuthorization) Descriptor() ([]byte, []int) {
+	return file_api_authorization_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ExternalAuthorization) GetRules() []*ExternalAuthorization_Rule {
+	if x != nil {
+		return x.Rules
+	}
+	return nil
+}
+
+type ExternalAuthorization_Rule struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Path          string         `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
+	Authorization *Authorization `protobuf:"bytes,2,opt,name=authorization,proto3" json:"authorization,omitempty"`
+}
+
+func (x *ExternalAuthorization_Rule) Reset() {
+	*x = ExternalAuthorization_Rule{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_authorization_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ExternalAuthorization_Rule) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExternalAuthorization_Rule) ProtoMessage() {}
+
+func (x *ExternalAuthorization_Rule) ProtoReflect() protoreflect.Message {
+	mi := &file_api_authorization_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExternalAuthorization_Rule.ProtoReflect.Descriptor instead.
+func (*ExternalAuthorization_Rule) Descriptor() ([]byte, []int) {
+	return file_api_authorization_proto_rawDescGZIP(), []int{1, 0}
+}
+
+func (x *ExternalAuthorization_Rule) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *ExternalAuthorization_Rule) GetAuthorization() *Authorization {
+	if x != nil {
+		return x.Authorization
+	}
+	return nil
+}
+
+var file_api_authorization_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*descriptorpb.MethodOptions)(nil),
 		ExtensionType: (*Authorization)(nil),
 		Field:         50000,
-		Name:          "nokamoto.github.com.authz",
+		Name:          "nokamoto.github.authz",
 		Tag:           "bytes,50000,opt,name=authz",
-		Filename:      "authorization.proto",
+		Filename:      "api/authorization.proto",
 	},
 }
 
 // Extension fields to descriptorpb.MethodOptions.
 var (
-	// optional nokamoto.github.com.Authorization authz = 50000;
-	E_Authz = &file_authorization_proto_extTypes[0]
+	// optional nokamoto.github.Authorization authz = 50000;
+	E_Authz = &file_api_authorization_proto_extTypes[0]
 )
 
-var File_authorization_proto protoreflect.FileDescriptor
+var File_api_authorization_proto protoreflect.FileDescriptor
 
-var file_authorization_proto_rawDesc = []byte{
-	0x0a, 0x13, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x13, 0x6e, 0x6f, 0x6b, 0x61, 0x6d, 0x6f, 0x74, 0x6f, 0x2e,
-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x1a, 0x20, 0x67, 0x6f, 0x6f, 0x67,
+var file_api_authorization_proto_rawDesc = []byte{
+	0x0a, 0x17, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0f, 0x6e, 0x6f, 0x6b, 0x61, 0x6d,
+	0x6f, 0x74, 0x6f, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x1a, 0x20, 0x67, 0x6f, 0x6f, 0x67,
 	0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x64, 0x65, 0x73, 0x63,
 	0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x2f, 0x0a, 0x0d,
 	0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x1e, 0x0a,
 	0x0a, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0a, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x3a, 0x5a, 0x0a,
-	0x05, 0x61, 0x75, 0x74, 0x68, 0x7a, 0x12, 0x1e, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x4f,
-	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0xd0, 0x86, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x22,
-	0x2e, 0x6e, 0x6f, 0x6b, 0x61, 0x6d, 0x6f, 0x74, 0x6f, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
-	0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69,
-	0x6f, 0x6e, 0x52, 0x05, 0x61, 0x75, 0x74, 0x68, 0x7a, 0x42, 0x31, 0x5a, 0x2f, 0x67, 0x69, 0x74,
-	0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6e, 0x6f, 0x6b, 0x61, 0x6d, 0x6f, 0x74, 0x6f,
-	0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x63, 0x75, 0x65, 0x2d, 0x65, 0x6e, 0x76, 0x6f, 0x79, 0x2d,
-	0x72, 0x62, 0x61, 0x63, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x09, 0x52, 0x0a, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x22, 0xbc, 0x01,
+	0x0a, 0x15, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72,
+	0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x41, 0x0a, 0x05, 0x72, 0x75, 0x6c, 0x65, 0x73,
+	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2b, 0x2e, 0x6e, 0x6f, 0x6b, 0x61, 0x6d, 0x6f, 0x74,
+	0x6f, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61,
+	0x6c, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x52,
+	0x75, 0x6c, 0x65, 0x52, 0x05, 0x72, 0x75, 0x6c, 0x65, 0x73, 0x1a, 0x60, 0x0a, 0x04, 0x52, 0x75,
+	0x6c, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x61, 0x74, 0x68, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x04, 0x70, 0x61, 0x74, 0x68, 0x12, 0x44, 0x0a, 0x0d, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72,
+	0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1e, 0x2e,
+	0x6e, 0x6f, 0x6b, 0x61, 0x6d, 0x6f, 0x74, 0x6f, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e,
+	0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0d, 0x61,
+	0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x3a, 0x56, 0x0a, 0x05,
+	0x61, 0x75, 0x74, 0x68, 0x7a, 0x12, 0x1e, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x4f, 0x70,
+	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0xd0, 0x86, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1e, 0x2e,
+	0x6e, 0x6f, 0x6b, 0x61, 0x6d, 0x6f, 0x74, 0x6f, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e,
+	0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x05, 0x61,
+	0x75, 0x74, 0x68, 0x7a, 0x42, 0x31, 0x5a, 0x2f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
+	0x6f, 0x6d, 0x2f, 0x6e, 0x6f, 0x6b, 0x61, 0x6d, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x72, 0x70, 0x63,
+	0x2d, 0x63, 0x75, 0x65, 0x2d, 0x65, 0x6e, 0x76, 0x6f, 0x79, 0x2d, 0x72, 0x62, 0x61, 0x63, 0x2f,
+	0x70, 0x6b, 0x67, 0x2f, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_authorization_proto_rawDescOnce sync.Once
-	file_authorization_proto_rawDescData = file_authorization_proto_rawDesc
+	file_api_authorization_proto_rawDescOnce sync.Once
+	file_api_authorization_proto_rawDescData = file_api_authorization_proto_rawDesc
 )
 
-func file_authorization_proto_rawDescGZIP() []byte {
-	file_authorization_proto_rawDescOnce.Do(func() {
-		file_authorization_proto_rawDescData = protoimpl.X.CompressGZIP(file_authorization_proto_rawDescData)
+func file_api_authorization_proto_rawDescGZIP() []byte {
+	file_api_authorization_proto_rawDescOnce.Do(func() {
+		file_api_authorization_proto_rawDescData = protoimpl.X.CompressGZIP(file_api_authorization_proto_rawDescData)
 	})
-	return file_authorization_proto_rawDescData
+	return file_api_authorization_proto_rawDescData
 }
 
-var file_authorization_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_authorization_proto_goTypes = []interface{}{
-	(*Authorization)(nil),              // 0: nokamoto.github.com.Authorization
-	(*descriptorpb.MethodOptions)(nil), // 1: google.protobuf.MethodOptions
+var file_api_authorization_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_api_authorization_proto_goTypes = []interface{}{
+	(*Authorization)(nil),              // 0: nokamoto.github.Authorization
+	(*ExternalAuthorization)(nil),      // 1: nokamoto.github.ExternalAuthorization
+	(*ExternalAuthorization_Rule)(nil), // 2: nokamoto.github.ExternalAuthorization.Rule
+	(*descriptorpb.MethodOptions)(nil), // 3: google.protobuf.MethodOptions
 }
-var file_authorization_proto_depIdxs = []int32{
-	1, // 0: nokamoto.github.com.authz:extendee -> google.protobuf.MethodOptions
-	0, // 1: nokamoto.github.com.authz:type_name -> nokamoto.github.com.Authorization
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	1, // [1:2] is the sub-list for extension type_name
-	0, // [0:1] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+var file_api_authorization_proto_depIdxs = []int32{
+	2, // 0: nokamoto.github.ExternalAuthorization.rules:type_name -> nokamoto.github.ExternalAuthorization.Rule
+	0, // 1: nokamoto.github.ExternalAuthorization.Rule.authorization:type_name -> nokamoto.github.Authorization
+	3, // 2: nokamoto.github.authz:extendee -> google.protobuf.MethodOptions
+	0, // 3: nokamoto.github.authz:type_name -> nokamoto.github.Authorization
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	3, // [3:4] is the sub-list for extension type_name
+	2, // [2:3] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_authorization_proto_init() }
-func file_authorization_proto_init() {
-	if File_authorization_proto != nil {
+func init() { file_api_authorization_proto_init() }
+func file_api_authorization_proto_init() {
+	if File_api_authorization_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_authorization_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_api_authorization_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Authorization); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_authorization_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ExternalAuthorization); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_authorization_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ExternalAuthorization_Rule); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -158,19 +300,19 @@ func file_authorization_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_authorization_proto_rawDesc,
+			RawDescriptor: file_api_authorization_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   3,
 			NumExtensions: 1,
 			NumServices:   0,
 		},
-		GoTypes:           file_authorization_proto_goTypes,
-		DependencyIndexes: file_authorization_proto_depIdxs,
-		MessageInfos:      file_authorization_proto_msgTypes,
-		ExtensionInfos:    file_authorization_proto_extTypes,
+		GoTypes:           file_api_authorization_proto_goTypes,
+		DependencyIndexes: file_api_authorization_proto_depIdxs,
+		MessageInfos:      file_api_authorization_proto_msgTypes,
+		ExtensionInfos:    file_api_authorization_proto_extTypes,
 	}.Build()
-	File_authorization_proto = out.File
-	file_authorization_proto_rawDesc = nil
-	file_authorization_proto_goTypes = nil
-	file_authorization_proto_depIdxs = nil
+	File_api_authorization_proto = out.File
+	file_api_authorization_proto_rawDesc = nil
+	file_api_authorization_proto_goTypes = nil
+	file_api_authorization_proto_depIdxs = nil
 }

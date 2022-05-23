@@ -1,4 +1,4 @@
-GO_OUT = pkg/api
+GO_OUT = pkg
 
 .PHONY: all
 all:
