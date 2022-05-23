@@ -26,6 +26,15 @@ jobs:
         PROTOC: 3.20.1
     - name: Install clang-format
       run: sudo apt-get update && sudo apt-get -y install --no-install-recommends clang-format
+    # https://github.com/actions/setup-go/issues/130
+    # https://github.com/actions/cache/blob/main/examples.md#go---modules
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: ${{ runner.os }}-go-
     - name: Install go deps
       run: |
         go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
