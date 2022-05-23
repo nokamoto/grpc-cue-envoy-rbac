@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package nokamoto.github;
+
+option go_package = "github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api";
+
+import "api/authorization.proto";
+
+service RBACService {
+  rpc CreateRole(CreateRoleRequest) returns (Role) {
+    option (nokamoto.github.authz) = {
+      permission: "rbac.role.create"
+    };
+  }
+  rpc CreateRoleBinding(CreateRoleBindingRequest) returns (RoleBinding) {
+    option (nokamoto.github.authz) = {
+      permission: "rbac.rolebinding.create"
+    };
+  }
+  rpc AuthorizeUser(AuthorizeUserRequest) returns (AuthorizeUserResponse);
+}
+
+message Role {
+  string name = 1;
+  repeated string permissions = 2;
+}
+
+message RoleBinding {
+  string role = 1;
+  string user = 2;
+}
+
+message CreateRoleRequest {
+  Role role = 1;
+}
+
+message CreateRoleBindingRequest {
+  RoleBinding role_binding = 1;
+}
+
+message AuthorizeUserRequest {
+  string user = 1;
+  Authorization authorization = 2;
+}
+
+message AuthorizeUserResponse {}

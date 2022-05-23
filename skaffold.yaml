@@ -26,6 +26,17 @@ build:
         - internal/**
         - pkg/**
         - go.*
+  - image: rbac
+    buildpacks:
+      builder: gcr.io/buildpacks/builder:v1
+      env:
+      - GOOGLE_BUILDABLE=./cmd/rbac
+      dependencies:
+        paths:
+        - cmd/**
+        - internal/**
+        - pkg/**
+        - go.*
 deploy:
   kustomize:
     paths:
@@ -43,3 +54,7 @@ portForward:
   resourceName: authorization
   port: 9001
   localPort: 9001
+- resourceType: service
+  resourceName: rbac
+  port: 9002
+  localPort: 9002
