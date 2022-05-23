@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rbac
+  name: rbac
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rbac
+  template:
+    metadata:
+      labels:
+        app: rbac
+    spec:
+      containers:
+      - image: rbac
+        name: rbac
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: rbac
+  name: rbac
+spec:
+  ports:
+  - name: tcp
+    port: 9002
+    protocol: TCP
+    targetPort: 9002
+  selector:
+    app: rbac
+  type: ClusterIP
+---

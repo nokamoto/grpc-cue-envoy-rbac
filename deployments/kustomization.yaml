@@ -9,3 +9,4 @@ resources:
 - authorization.yaml
 - envoy.yaml
 - example.yaml
+- rbac.yaml
