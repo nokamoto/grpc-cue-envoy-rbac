@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api"
-	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/pluginpb"
@@ -49,13 +48,13 @@ func (p *Plugin) Run() error {
 
 	p.parseParams(&req)
 
-	var cfg api.ExternalAuthorization
+	var cfg Config
 	for _, file := range req.GetProtoFile() {
 		p.debugf("file: %s\n", file.GetName())
 
 		for _, s := range req.GetFileToGenerate() {
 			if s == file.GetName() {
-				if err := p.useFile(file, &cfg); err != nil {
+				if err := p.useFile(file, &cfg.ExternalAuthorization); err != nil {
 					return err
 				}
 				break
@@ -63,7 +62,7 @@ func (p *Plugin) Run() error {
 		}
 	}
 
-	content, err := protojson.Marshal(&cfg)
+	content, err := cfg.Marshal()
 	if err != nil {
 		return err
 	}

@@ -11,7 +11,8 @@ type example struct {
 }
 
 func main() {
-	server.Serve(9000, func(s *grpc.Server) {
+	server.Serve(9000, func(s *grpc.Server) error {
 		api.RegisterExampleServiceServer(s, &example{})
+		return nil
 	})
 }

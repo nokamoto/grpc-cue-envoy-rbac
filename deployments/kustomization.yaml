@@ -2,6 +2,9 @@ configMapGenerator:
 - name: envoy-conf
   files:
   - envoy-conf.yaml
+- name: rbac-conf
+  files:
+  - rbac.json
 resources:
 - authorization.yaml
 - envoy.yaml
