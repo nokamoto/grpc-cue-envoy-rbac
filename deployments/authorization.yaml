@@ -18,6 +18,13 @@ spec:
       containers:
       - image: authorization
         name: authorization
+        volumeMounts:
+        - mountPath: /etc/authorization
+          name: rbac-conf
+      volumes:
+      - configMap:
+          name: rbac-conf
+        name: rbac-conf
 ---
 apiVersion: v1
 kind: Service

@@ -5,13 +5,19 @@ import (
 	"log"
 
 	v3 "github.com/envoyproxy/go-control-plane/envoy/service/auth/v3"
+	"github.com/nokamoto/grpc-cue-envoy-rbac/internal/rbac/plugin"
 	"google.golang.org/genproto/googleapis/rpc/status"
 	"google.golang.org/grpc/codes"
 )
 
 // Authorization implements v3.AuthorizationServer.
 type Authorization struct {
+	cfg *plugin.Config
 	v3.UnimplementedAuthorizationServer
+}
+
+func NewAuthorization(cfg *plugin.Config) *Authorization {
+	return &Authorization{cfg: cfg}
 }
 
 const (

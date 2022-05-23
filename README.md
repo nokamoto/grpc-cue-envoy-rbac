@@ -2,6 +2,7 @@
 
 ## Skaffold
 ```bash
+make # create deployments/rbac.json (protoc-gen-rbac)
 skaffold dev
 ```
 
