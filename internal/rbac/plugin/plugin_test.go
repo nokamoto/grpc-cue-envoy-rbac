@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api/api"
+	"github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/testing/protocmp"
