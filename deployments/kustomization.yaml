@@ -10,3 +10,4 @@ resources:
 - envoy.yaml
 - example.yaml
 - rbac.yaml
+- reflection.yaml

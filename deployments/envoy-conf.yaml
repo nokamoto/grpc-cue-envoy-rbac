@@ -32,13 +32,21 @@ static_resources:
           route_config:
             name: local_route
             virtual_hosts:
-            - name: local_service
+            - name: example_service
               domains: ["*"]
               routes:
               - match:
-                  prefix: "/"
+                  prefix: "/nokamoto.github.ExampleService"
                 route:
                   cluster: service_example
+              - match:
+                  prefix: "/nokamoto.github.RBACService"
+                route:
+                  cluster: service_rbac
+              - match:
+                  prefix: "/grpc.reflection.v1alpha.ServerReflection"
+                route:
+                  cluster: service_reflection
   clusters:
   - name: service_example
     type: LOGICAL_DNS
@@ -68,3 +76,29 @@ static_resources:
               socket_address:
                 address: authorization
                 port_value: 9001
+  - name: service_rbac
+    type: LOGICAL_DNS
+    dns_lookup_family: V4_ONLY
+    http2_protocol_options: {}
+    load_assignment:
+      cluster_name: service_rbac
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: rbac
+                port_value: 9002
+  - name: service_reflection
+    type: LOGICAL_DNS
+    dns_lookup_family: V4_ONLY
+    http2_protocol_options: {}
+    load_assignment:
+      cluster_name: service_reflection
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: reflection
+                port_value: 9003

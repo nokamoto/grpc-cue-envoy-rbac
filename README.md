@@ -12,10 +12,12 @@ skaffold dev
 | [envoy](deployments/envoy.yaml) | 8080 |
 | [authorization](deployments/authorization.yaml) | 9001 |
 | [rbac](deployments/rbac.yaml) | 9002 |
+| [reflection](deployments/reflection.yaml) | 9003 |
 
 ```bash
 grpcurl -plaintext localhost:9000 list
 grpcurl -plaintext localhost:8080 list
 grpcurl -plaintext localhost:9001 list
 grpcurl -plaintext localhost:9002 list
+grpcurl -plaintext localhost:9003 list
 ```
