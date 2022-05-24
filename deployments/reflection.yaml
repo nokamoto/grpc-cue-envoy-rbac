@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reflection
+  name: reflection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reflection
+  template:
+    metadata:
+      labels:
+        app: reflection
+    spec:
+      containers:
+      - image: reflection
+        name: reflection
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: reflection
+  name: reflection
+spec:
+  ports:
+  - name: tcp
+    port: 9003
+    protocol: TCP
+    targetPort: 9003
+  selector:
+    app: reflection
+  type: ClusterIP
+---
