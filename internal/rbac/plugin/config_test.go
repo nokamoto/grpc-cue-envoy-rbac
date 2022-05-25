@@ -9,30 +9,28 @@ import (
 )
 
 func TestConfig(t *testing.T) {
-	want := Config{
-		ExternalAuthorization: api.ExternalAuthorization{
-			Rules: []*api.ExternalAuthorization_Rule{
-				{
-					Path: "/foo",
-					Authorization: &api.Authorization{
-						Permission: "bar",
-					},
+	want := &Config{
+		Rules: []*api.ExternalAuthorization_Rule{
+			{
+				Path: "/foo",
+				Authorization: &api.Authorization{
+					Permission: "bar",
 				},
 			},
 		},
 	}
 
-	json, err := want.Marshal()
+	json, err := Marshal(want)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	var got Config
-	if err := got.Unmarshal(json); err != nil {
+	got, err := Unmarshal(json)
+	if err != nil {
 		t.Fatal(err)
 	}
 
-	if diff := cmp.Diff(&want.ExternalAuthorization, &got.ExternalAuthorization, protocmp.Transform()); len(diff) != 0 {
+	if diff := cmp.Diff(want, got, protocmp.Transform()); len(diff) != 0 {
 		t.Errorf("diff: %s", diff)
 	}
 }

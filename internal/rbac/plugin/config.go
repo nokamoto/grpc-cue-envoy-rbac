@@ -6,16 +6,18 @@ import (
 )
 
 // Config represents a plugin output file.
-type Config struct {
-	api.ExternalAuthorization
-}
+type Config = api.ExternalAuthorization
 
 // Marshal returns JSON bytes of the configuration.
-func (c *Config) Marshal() ([]byte, error) {
-	return protojson.Marshal(&c.ExternalAuthorization)
+func Marshal(c *Config) ([]byte, error) {
+	return protojson.Marshal(c)
 }
 
 // Unmarshal parses JSON bytes to the configuration.
-func (c *Config) Unmarshal(data []byte) error {
-	return protojson.Unmarshal(data, &c.ExternalAuthorization)
+func Unmarshal(data []byte) (*Config, error) {
+	var c api.ExternalAuthorization
+	if err := protojson.Unmarshal(data, &c); err != nil {
+		return nil, err
+	}
+	return &c, nil
 }
