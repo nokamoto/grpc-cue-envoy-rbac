@@ -21,14 +21,14 @@ func main() {
 			return err
 		}
 
-		var cfg plugin.Config
-		if err := cfg.Unmarshal(data); err != nil {
+		cfg, err := plugin.Unmarshal(data)
+		if err != nil {
 			return err
 		}
 
 		log.Printf("config: %v", cfg.String())
 
-		v3.RegisterAuthorizationServer(s, authorization.NewAuthorization(&cfg))
+		v3.RegisterAuthorizationServer(s, authorization.NewAuthorization(cfg))
 		return nil
 	})
 }

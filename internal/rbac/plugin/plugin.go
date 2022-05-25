@@ -54,7 +54,7 @@ func (p *Plugin) Run() error {
 
 		for _, s := range req.GetFileToGenerate() {
 			if s == file.GetName() {
-				if err := p.useFile(file, &cfg.ExternalAuthorization); err != nil {
+				if err := p.useFile(file, &cfg); err != nil {
 					return err
 				}
 				break
@@ -62,7 +62,7 @@ func (p *Plugin) Run() error {
 		}
 	}
 
-	content, err := cfg.Marshal()
+	content, err := Marshal(&cfg)
 	if err != nil {
 		return err
 	}
