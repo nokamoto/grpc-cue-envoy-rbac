@@ -11,6 +11,8 @@ all:
 		--go-grpc_opt=paths=source_relative \
 		$$(find api -type f -name *.proto)
 
+	go generate ./...
+
 	go test ./...
 	go mod tidy
 
