@@ -5,7 +5,9 @@ import (
 	"testing"
 
 	v3 "github.com/envoyproxy/go-control-plane/envoy/service/auth/v3"
+	"github.com/golang/mock/gomock"
 	"github.com/google/go-cmp/cmp"
+	"github.com/nokamoto/grpc-cue-envoy-rbac/internal/service/authorization/mock"
 	"github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -25,12 +27,21 @@ func newRequest(path string) *v3.CheckRequest {
 }
 
 func TestAuthorization_Check(t *testing.T) {
+	rules := []*api.ExternalAuthorization_Rule{
+		{
+			Path: "/ok",
+			Authorization: &api.Authorization{
+				Permission: "foo",
+			},
+		},
+	}
+
 	tests := []struct {
-		name  string
-		rules []*api.ExternalAuthorization_Rule
-		req   *v3.CheckRequest
-		want  *v3.CheckResponse
-		code  codes.Code
+		name string
+		mock func(rbac *mock.MockRBAC)
+		req  *v3.CheckRequest
+		want *v3.CheckResponse
+		code codes.Code
 	}{
 		{
 			name: "allow reflection",
@@ -43,38 +54,58 @@ func TestAuthorization_Check(t *testing.T) {
 			want: newResponse(codes.OK, ""),
 		},
 		{
-			name: "todo: allow if authorization passed",
-			rules: []*api.ExternalAuthorization_Rule{
-				{
-					Path: "/ok",
+			name: "allow if authorization passed",
+			mock: func(rbac *mock.MockRBAC) {
+				rbac.EXPECT().AuthorizeUser(gomock.Any(), &api.AuthorizeUserRequest{
+					User: "todo",
 					Authorization: &api.Authorization{
 						Permission: "foo",
 					},
-				},
+				}).Return(nil, nil)
 			},
 			req:  newRequest("/ok"),
-			want: newResponse(codes.Unimplemented, "unimplemented"),
+			want: newResponse(codes.OK, ""),
 		},
 		{
-			name: "todo: deny if authorization failed",
-			rules: []*api.ExternalAuthorization_Rule{
-				{
-					Path: "/ok",
+			name: "deny if authorization failed",
+			mock: func(rbac *mock.MockRBAC) {
+				rbac.EXPECT().AuthorizeUser(gomock.Any(), &api.AuthorizeUserRequest{
+					User: "todo",
 					Authorization: &api.Authorization{
 						Permission: "foo",
 					},
-				},
+				}).Return(nil, status.Error(codes.PermissionDenied, ""))
 			},
 			req:  newRequest("/ok"),
-			want: newResponse(codes.Unimplemented, "unimplemented"),
+			want: newResponse(codes.PermissionDenied, "permission denied"),
+		},
+		{
+			name: "deny if unexpected error",
+			mock: func(rbac *mock.MockRBAC) {
+				rbac.EXPECT().AuthorizeUser(gomock.Any(), &api.AuthorizeUserRequest{
+					User: "todo",
+					Authorization: &api.Authorization{
+						Permission: "foo",
+					},
+				}).Return(nil, status.Error(codes.DeadlineExceeded, ""))
+			},
+			req:  newRequest("/ok"),
+			want: newResponse(codes.Internal, "internal error occurs"),
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			rbac := mock.NewMockRBAC(ctrl)
+			if test.mock != nil {
+				test.mock(rbac)
+			}
+
 			a := &Authorization{
 				cfg: &api.ExternalAuthorization{
-					Rules: test.rules,
+					Rules: rules,
 				},
+				rbac: rbac,
 			}
 			got, err := a.Check(context.TODO(), test.req)
 			if status.Code(err) != test.code {

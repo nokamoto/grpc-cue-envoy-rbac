@@ -7,18 +7,20 @@ import (
 	v3 "github.com/envoyproxy/go-control-plane/envoy/service/auth/v3"
 	"github.com/nokamoto/grpc-cue-envoy-rbac/internal/rbac/plugin"
 	"github.com/nokamoto/grpc-cue-envoy-rbac/pkg/api"
-	"google.golang.org/genproto/googleapis/rpc/status"
+	googleapisstatus "google.golang.org/genproto/googleapis/rpc/status"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // Authorization implements v3.AuthorizationServer.
 type Authorization struct {
-	cfg *plugin.Config
+	cfg  *plugin.Config
+	rbac RBAC
 	v3.UnimplementedAuthorizationServer
 }
 
-func NewAuthorization(cfg *plugin.Config) *Authorization {
-	return &Authorization{cfg: cfg}
+func NewAuthorization(cfg *plugin.Config, rbac RBAC) *Authorization {
+	return &Authorization{cfg: cfg, rbac: rbac}
 }
 
 const (
@@ -27,7 +29,7 @@ const (
 
 func newResponse(code codes.Code, message string) *v3.CheckResponse {
 	return &v3.CheckResponse{
-		Status: &status.Status{
+		Status: &googleapisstatus.Status{
 			Code:    int32(code),
 			Message: message,
 		},
@@ -47,7 +49,18 @@ func (a *Authorization) authorize(ctx context.Context, req *v3.CheckRequest, rul
 	if rule == nil {
 		return newResponse(codes.OK, "")
 	}
-	return newResponse(codes.Unimplemented, "unimplemented")
+	_, err := a.rbac.AuthorizeUser(ctx, &api.AuthorizeUserRequest{
+		User:          "todo",
+		Authorization: rule.GetAuthorization(),
+	})
+	switch status.Code(err) {
+	case codes.OK:
+		return newResponse(codes.OK, "")
+	case codes.PermissionDenied:
+		return newResponse(codes.PermissionDenied, "permission denied")
+	}
+	log.Printf("AuthorizeUser: %v", err)
+	return newResponse(codes.Internal, "internal error occurs")
 }
 
 func (a *Authorization) Check(ctx context.Context, req *v3.CheckRequest) (*v3.CheckResponse, error) {
