@@ -25,6 +25,7 @@ func NewAuthorization(cfg *plugin.Config, rbac RBAC) *Authorization {
 
 const (
 	reflectionPath = "/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo"
+	usernameHeader = "x-username"
 )
 
 func newResponse(code codes.Code, message string) *v3.CheckResponse {
@@ -50,7 +51,7 @@ func (a *Authorization) authorize(ctx context.Context, req *v3.CheckRequest, rul
 		return newResponse(codes.OK, "")
 	}
 	_, err := a.rbac.AuthorizeUser(ctx, &api.AuthorizeUserRequest{
-		User:          "todo",
+		User:          req.GetAttributes().GetRequest().GetHttp().GetHeaders()[usernameHeader],
 		Authorization: rule.GetAuthorization(),
 	})
 	switch status.Code(err) {
