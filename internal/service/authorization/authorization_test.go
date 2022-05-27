@@ -14,12 +14,13 @@ import (
 	"google.golang.org/protobuf/testing/protocmp"
 )
 
-func newRequest(path string) *v3.CheckRequest {
+func newRequest(path string, headers map[string]string) *v3.CheckRequest {
 	return &v3.CheckRequest{
 		Attributes: &v3.AttributeContext{
 			Request: &v3.AttributeContext_Request{
 				Http: &v3.AttributeContext_HttpRequest{
-					Path: path,
+					Path:    path,
+					Headers: headers,
 				},
 			},
 		},
@@ -45,51 +46,51 @@ func TestAuthorization_Check(t *testing.T) {
 	}{
 		{
 			name: "allow reflection",
-			req:  newRequest("/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo"),
+			req:  newRequest("/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo", nil),
 			want: newResponse(codes.OK, ""),
 		},
 		{
 			name: "allow unknown path",
-			req:  newRequest("/unknown"),
+			req:  newRequest("/unknown", nil),
 			want: newResponse(codes.OK, ""),
 		},
 		{
 			name: "allow if authorization passed",
 			mock: func(rbac *mock.MockRBAC) {
 				rbac.EXPECT().AuthorizeUser(gomock.Any(), &api.AuthorizeUserRequest{
-					User: "todo",
+					User: "bar",
 					Authorization: &api.Authorization{
 						Permission: "foo",
 					},
 				}).Return(nil, nil)
 			},
-			req:  newRequest("/ok"),
+			req:  newRequest("/ok", map[string]string{"x-username": "bar"}),
 			want: newResponse(codes.OK, ""),
 		},
 		{
 			name: "deny if authorization failed",
 			mock: func(rbac *mock.MockRBAC) {
 				rbac.EXPECT().AuthorizeUser(gomock.Any(), &api.AuthorizeUserRequest{
-					User: "todo",
+					User: "bar",
 					Authorization: &api.Authorization{
 						Permission: "foo",
 					},
 				}).Return(nil, status.Error(codes.PermissionDenied, ""))
 			},
-			req:  newRequest("/ok"),
+			req:  newRequest("/ok", map[string]string{"x-username": "bar"}),
 			want: newResponse(codes.PermissionDenied, "permission denied"),
 		},
 		{
 			name: "deny if unexpected error",
 			mock: func(rbac *mock.MockRBAC) {
 				rbac.EXPECT().AuthorizeUser(gomock.Any(), &api.AuthorizeUserRequest{
-					User: "todo",
+					User: "bar",
 					Authorization: &api.Authorization{
 						Permission: "foo",
 					},
 				}).Return(nil, status.Error(codes.DeadlineExceeded, ""))
 			},
-			req:  newRequest("/ok"),
+			req:  newRequest("/ok", map[string]string{"x-username": "bar"}),
 			want: newResponse(codes.Internal, "internal error occurs"),
 		},
 	}
