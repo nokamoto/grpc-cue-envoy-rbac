@@ -21,3 +21,7 @@ all:
 	protoc --rbac_out=deployments \
 		--rbac_opt=debug=stderr \
 		$$(find api -type f -name *.proto)
+
+.PHONY: fuzz
+fuzz:
+	go test -fuzz=FuzzConfig -fuzztime=3s ./internal/rbac/plugin
